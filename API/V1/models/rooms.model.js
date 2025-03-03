@@ -18,4 +18,4 @@ const roomSchema = new mongoose.Schema({
 
 const Rooms = mongoose.model('Rooms' , roomSchema , "rooms")
 
-module.exports = Rooms
+module.exports = Rooms // xuat
