@@ -6,7 +6,7 @@ const forgorschema = new mongoose.Schema(
     otp: Number,
     expireAt: {
       type: Date,
-      expires: 11, // 11 seconds
+      expires: 20, // 11 seconds
       default: Date.now,
     },
   },
