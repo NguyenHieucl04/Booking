@@ -53,6 +53,7 @@ module.exports.cloudFileds = async (req, res, next) => {
         for (const item of array) {
           try {
             const result = await uploadToCloudinary(item.buffer);
+
             req.body[key].push(result);
           } catch (error) {
             console.error("Error uploading image:", error);

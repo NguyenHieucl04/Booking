@@ -12,23 +12,23 @@ module.exports.login = async (req, res) => {
     const existEmail = await User.findOne({ deleted: false, email: email });
     if (!existEmail) {
       console.log("email not exist!");
-      res.json({
+      res.status(400).json({
         message: "email not exist!",
-        code: 3,
+        code: 400,
       });
       return;
     }
     if (md5(password) !== existEmail.password) {
-      res.json({
+      res.status(400).json({
         message: "Incorrect password!",
-        code: 4,
+        code: 400,
       });
       return;
     }
     res.cookie("token", existEmail.token);
     res.json({
       message: "Login successful!",
-      code: 1,
+      code: 200,
       token: existEmail.token,
     });
   } catch (error) {
@@ -46,18 +46,18 @@ module.exports.addUser = async (req, res) => {
 
     const existEmail = await User.findOne({ deleted: false, email: email });
     if (existEmail) {
-      res.json({
+      res.status(400).json({
         message: "Email already exists!",
-        code: 2,
+        code: 400,
       });
       return;
     }
     let password = req.body.password;
     const passwordconfirm = req.body.passwordconfirm;
     if (password !== passwordconfirm) {
-      res.json({
+      res.status(400).json({
         message: "Password and Confirm Password are not the same!",
-        code: 2,
+        code: 400,
       });
       return;
     }
@@ -72,7 +72,7 @@ module.exports.addUser = async (req, res) => {
 
     res.json({
       message: "Create Sucessful!",
-      code: 1,
+      code: 200,
     });
   } catch (error) {
     res.json({
@@ -89,9 +89,9 @@ module.exports.forgotPassword = async (req, res) => {
     const email = req.body.email;
     const existEmail = await User.findOne({ deleted: false, email: email });
     if (!existEmail) {
-      res.json({
+      res.status(400).json({
         message: "Email not exist!",
-        code: 3,
+        code: 400,
       });
       return;
     }
@@ -125,7 +125,7 @@ module.exports.checkOtp = async (req, res) => {
     const user = await User.findOne({ deleted: false, email: email });
     const existOtp = await ForgotPassword.findOne({ email: email, otp: otp });
     if (!existOtp) {
-      res.json({
+      res.status(400).json({
         message: "OTP incorrect!",
         code: 400,
       });
@@ -137,7 +137,7 @@ module.exports.checkOtp = async (req, res) => {
       code: 200,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: "Server error!",
       code: 500,
     });

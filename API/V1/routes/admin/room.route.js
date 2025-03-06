@@ -17,5 +17,16 @@ routerRoom.post(
   cloudiary.cloudFileds,
   controller.addRoom
 );
-
+// [PATCH] /api/v1/admin/rooms/edit
+routerRoom.patch(
+  "/rooms/edit/:idRoom",
+  upload.fields([
+    { name: "thumbnail", maxCount: 1 },
+    { name: "imageArray", maxCount: 5 },
+  ]),
+  cloudiary.cloudFileds,
+  controller.editRoom
+);
+// [PATCH] /api/v1/admin/rooms/delete/:idRoom
+routerRoom.patch("/rooms/delete/:idRoom", controller.deleteRoom);
 module.exports = routerRoom;

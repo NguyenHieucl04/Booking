@@ -10,7 +10,10 @@ const roomSchema = new mongoose.Schema(
     status: String,
     description: String,
     peopleMax: Number,
-    thumbnail: String,
+    thumbnail: {
+      type: Array,
+      default: [],
+    },
     imageArray: {
       type: Array,
       default: [],
