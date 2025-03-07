@@ -3,18 +3,24 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "",
-    pass: "",
+    user: "", // tên emai của mày
+    pass: "", // pass của mày tạo nhé
   },
 });
 
 module.exports.sendMail = (email, otp) => {
   const mailOptions = {
-    from: "dinhkiet2k4@gmail.com",
+    from: "", // tên emai của mày
     to: email,
     subject: "Send mail using Nodejs",
     text: `Your OTP is ${otp}`,
-    html: `<h1>Welcome</h1><p>Your OTP is ${otp}</p>`,
+    html: ` <h2>🔐 Mã OTP của bạn</h2>
+                    <p>Xin chào,</p>
+                    <p>Mã xác thực (OTP) của bạn là:</p>
+                    <div class="otp">${otp}</div>
+                    <p>Mã OTP này có hiệu lực trong <strong>5 phút</strong>. Vui lòng không chia sẻ mã này với bất kỳ ai.</p>
+                    <p>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email này.</p>
+                    <div class="footer">Trân trọng,<br>Đội ngũ hỗ trợ</div>`,
   };
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {

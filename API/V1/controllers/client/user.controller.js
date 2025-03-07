@@ -18,9 +18,6 @@ module.exports.login = async (req, res) => {
       });
       return;
     }
-    // console.log(password);
-    // console.log(md5(password));
-    // console.log(existEmail.password);
     if (md5(password) !== existEmail.password) {
       res.status(400).json({
         message: "Incorrect password!",

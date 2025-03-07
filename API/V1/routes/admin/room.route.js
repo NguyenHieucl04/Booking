@@ -29,4 +29,14 @@ routerRoom.patch(
 );
 // [PATCH] /api/v1/admin/rooms/delete/:idRoom
 routerRoom.patch("/rooms/delete/:idRoom", controller.deleteRoom);
+// [PATCH] /api/v1/admin/rooms/change-status/:idRoom
+routerRoom.patch("/rooms/change-status/:idRoom", controller.changeStatusRoom);
+
+// BIN
+//[GET] /api/v1/admin/rooms-delete
+routerRoom.get("/rooms-delete", controller.roomDelete);
+
+// [PATCH] /api/v1/admin/rooms/undelete/:idRoom
+routerRoom.patch("/rooms/undelete/:idRoom", controller.undelete);
+// END BIN
 module.exports = routerRoom;
