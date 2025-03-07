@@ -3,21 +3,22 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "youremail@gmail.com",
-    pass: "yourpassword",
+    user: "",
+    pass: "",
   },
 });
 
 module.exports.sendMail = (email, otp) => {
   const mailOptions = {
-    from: "youremail@gmail.com",
+    from: "dinhkiet2k4@gmail.com",
     to: email,
-    subject: "Sending Email using Node.js",
+    subject: "Send mail using Nodejs",
     text: `Your OTP is ${otp}`,
-    html: "<h1>Welcome</h1><p>That was easy!</p>",
+    html: `<h1>Welcome</h1><p>Your OTP is ${otp}</p>`,
   };
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
+      console.log("Send email error!");
       console.log(error);
     } else {
       console.log("Email sent: " + info.response);

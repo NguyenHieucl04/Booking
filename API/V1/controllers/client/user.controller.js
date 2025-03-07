@@ -7,7 +7,7 @@ const { sendMail } = require("../../helper/sendmail.helper");
 module.exports.login = async (req, res) => {
   try {
     const email = req.body.email;
-    const password = req.body.password;
+    let password = req.body.password;
 
     const existEmail = await User.findOne({ deleted: false, email: email });
     if (!existEmail) {
@@ -18,6 +18,9 @@ module.exports.login = async (req, res) => {
       });
       return;
     }
+    // console.log(password);
+    // console.log(md5(password));
+    // console.log(existEmail.password);
     if (md5(password) !== existEmail.password) {
       res.status(400).json({
         message: "Incorrect password!",
@@ -26,13 +29,13 @@ module.exports.login = async (req, res) => {
       return;
     }
     res.cookie("token", existEmail.token);
-    res.json({
+    res.status(200).json({
       message: "Login successful!",
       code: 200,
       token: existEmail.token,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: "Server error!",
       code: 500,
     });
@@ -70,12 +73,12 @@ module.exports.addUser = async (req, res) => {
     await clientNew.save();
     res.cookie("token", clientNew.token);
 
-    res.json({
+    res.status(200).json({
       message: "Create Sucessful!",
       code: 200,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: "Server error!",
       code: 500,
     });
@@ -149,19 +152,20 @@ module.exports.resetPassword = async (req, res) => {
     let password = req.body.password;
     const passwordconfirm = req.body.passwordconfirm;
     if (req.user.password === md5(password)) {
-      res.json({
+      res.status(400).json({
         message: "Password incorrect!",
         code: 400,
       });
       return;
     }
     if (password !== passwordconfirm) {
-      res.json({
+      res.status(400).json({
         message: "Password and Confirm Password are not the same!",
         code: 400,
       });
       return;
     }
+    console.log(req.user.token);
     await User.updateOne(
       {
         token: req.user.token,
@@ -171,12 +175,12 @@ module.exports.resetPassword = async (req, res) => {
         password: md5(password),
       }
     );
-    res.json({
+    res.status(200).json({
       message: "Reset password successful!",
       code: 200,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: "Server error!",
       code: 500,
     });
@@ -187,12 +191,12 @@ module.exports.resetPassword = async (req, res) => {
 module.exports.logout = async (req, res) => {
   try {
     res.clearCookie("token");
-    res.json({
+    res.status(200).json({
       message: "Logout successful!",
       code: 200,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: "Server error!",
       code: 500,
     });
