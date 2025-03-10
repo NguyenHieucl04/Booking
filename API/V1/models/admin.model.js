@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 const tokenCreate = require("../helper/create.token");
-const userSchema = new mongoose.Schema(
+const adminSchema = new mongoose.Schema(
   {
-    //  tao truong du lieu
-    name: String,
+    fullName: String,
     email: String,
     password: String,
-    phone: String,
     thumbnail: Array,
     status: String,
     address: String,
+    position: Number,
     deleted: {
       type: Boolean,
       default: false,
@@ -18,12 +17,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: tokenCreate.createToken(30),
     },
+    roleId: String,
   },
   {
     timestamps: true,
   }
 );
 
-const User = mongoose.model("User", userSchema, "user");
-
-module.exports = User;
+const Admin = mongoose.model("Admin", adminSchema, "admin");
+module.exports = Admin;

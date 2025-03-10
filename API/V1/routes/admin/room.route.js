@@ -6,10 +6,11 @@ const upload = multer({ storage: storage });
 const controller = require("../../controllers/admin/room.controller");
 const cloudiary = require("../../middlewares/admin/cloudinay.middlewares");
 // [GET] /api/v1/admin/rooms
-routerRoom.get("/rooms", controller.getRoom);
+routerRoom.get("/", controller.getRoom);
 // [POST] /API/V1/ADMIT/rooms/create
 routerRoom.post(
-  "/rooms/create",
+  "/create",
+
   upload.fields([
     { name: "thumbnail", maxCount: 1 },
     { name: "imageArray", maxCount: 5 },
@@ -17,26 +18,42 @@ routerRoom.post(
   cloudiary.cloudFileds,
   controller.addRoom
 );
-// [PATCH] /api/v1/admin/rooms/edit
+// [GET] /api/v1/admin/rooms/detail/:idRoom
+routerRoom.get("/detail/:idRoom", controller.detailRoom);
+// [PATCH] /api/v1/admin/rooms/edit/:idRoom
 routerRoom.patch(
-  "/rooms/edit/:idRoom",
+  "/edit/:idRoom",
+
   upload.fields([
     { name: "thumbnail", maxCount: 1 },
     { name: "imageArray", maxCount: 5 },
   ]),
   cloudiary.cloudFileds,
+
   controller.editRoom
 );
 // [PATCH] /api/v1/admin/rooms/delete/:idRoom
-routerRoom.patch("/rooms/delete/:idRoom", controller.deleteRoom);
+routerRoom.patch(
+  "/delete/:idRoom",
+
+  controller.deleteRoom
+);
 // [PATCH] /api/v1/admin/rooms/change-status/:idRoom
-routerRoom.patch("/rooms/change-status/:idRoom", controller.changeStatusRoom);
+routerRoom.patch(
+  "/change-status/:idRoom",
+
+  controller.changeStatusRoom
+);
 
 // BIN
 //[GET] /api/v1/admin/rooms-delete
-routerRoom.get("/rooms-delete", controller.roomDelete);
+routerRoom.get(
+  "/rooms-delete",
+
+  controller.roomDelete
+);
 
 // [PATCH] /api/v1/admin/rooms/undelete/:idRoom
-routerRoom.patch("/rooms/undelete/:idRoom", controller.undelete);
+routerRoom.patch("/undelete/:idRoom", controller.undelete);
 // END BIN
 module.exports = routerRoom;

@@ -5,11 +5,12 @@ const roomSchema = new mongoose.Schema(
   {
     nameRoom: String,
     numberRoom: Number,
-    avatar: String,
+    category_id: String,
     price: Number,
     status: String,
     description: String,
-    peopleMax: Number,
+    capacity: Number,
+    position: Number,
     thumbnail: {
       type: Array,
       default: [],
@@ -20,6 +21,7 @@ const roomSchema = new mongoose.Schema(
     },
     bed: Number,
     livePeople: Number,
+    windowView: String, // Loại tầm nhìn của phòng
     discountPersent: Number,
     slug: {
       type: String,
@@ -30,6 +32,8 @@ const roomSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    beds: Number,
+    floor: Number,
   },
   {
     timestamps: true,
