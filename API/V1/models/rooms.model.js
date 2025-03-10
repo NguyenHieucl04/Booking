@@ -34,6 +34,24 @@ const roomSchema = new mongoose.Schema(
     },
     beds: Number,
     floor: Number,
+    createdBy: {
+      account_id: String,
+      fullName: String,
+      createAt: Date,
+    },
+    editBy: [
+      {
+        account_id: String,
+        fullName: String,
+        editAt: Date,
+      },
+    ],
+
+    deletedBy: {
+      account_id: String,
+      fullName: String,
+      deletedAt: Date,
+    },
   },
   {
     timestamps: true,

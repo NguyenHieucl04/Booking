@@ -1,7 +1,6 @@
 const Rooms = require("../../models/rooms.model");
 
 // //[GET] /api/v1/admin/rooms?page={number}&status={status}&keyword={nameRoom}&sortkey={truong}&sortvalue=asc || desc
-const paginationHelper = require("../../helper/pagination.help");
 module.exports.getRoom = async (req, res) => {
   try {
     const {
@@ -65,6 +64,12 @@ module.exports.addRoom = async (req, res) => {
     const position =
       req.body.position !== undefined ? req.body.position : allRooms + 1;
     dataClient.position = position;
+    const adminCreate = {
+      account_id: req.admin.id,
+      fullName: req.admin.fullName,
+      createAt: Date.now(),
+    };
+    dataClient.createdBy = adminCreate;
     const data = new Rooms(dataClient);
     await data.save();
     res.json({
@@ -114,13 +119,18 @@ module.exports.editRoom = async (req, res) => {
       });
       return;
     }
-
+    const adminEdit = {
+      account_id: req.admin.id,
+      fullName: req.admin.fullName,
+      editAt: Date.now(),
+    };
     await Rooms.updateOne(
       {
         _id: id,
       },
       {
         ...req.body,
+        $push: { editBy: adminEdit },
       }
     );
     res.status(200).json({
@@ -148,12 +158,18 @@ module.exports.deleteRoom = async (req, res) => {
       });
       return;
     }
+    const adminDelete = {
+      account_id: req.admin.id,
+      fullName: req.admin.fullName,
+      deletedAt: Date.now(),
+    };
     await Rooms.updateOne(
       {
         _id: id,
       },
       {
         deleted: true,
+        deletedBy: adminDelete,
       }
     );
     res.status(200).json({
@@ -197,12 +213,18 @@ module.exports.changeStatusRoom = async (req, res) => {
       });
       return;
     }
+    const adminEdit = {
+      account_id: req.admin.id,
+      fullName: req.admin.fullName,
+      editAt: Date.now(),
+    };
     await Rooms.updateOne(
       {
         _id: idRoom,
       },
       {
         status: status,
+        $push: { editBy: adminEdit },
       }
     );
 
@@ -247,7 +269,15 @@ module.exports.undelete = async (req, res) => {
       });
       return;
     }
-    await Rooms.updateOne({ _id: idRoom }, { deleted: false });
+    const adminEdit = {
+      account_id: req.admin.id,
+      fullName: req.admin.fullName,
+      editAt: Date.now(),
+    };
+    await Rooms.updateOne(
+      { _id: idRoom },
+      { deleted: false, $push: { editBy: adminEdit } }
+    );
     res.status(200).json({
       message: "Successful!",
       code: 200,

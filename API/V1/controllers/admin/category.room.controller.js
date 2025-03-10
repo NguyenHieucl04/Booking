@@ -1,4 +1,7 @@
 const CategoryRooms = require("../../models/category.room");
+/*
+Tao vừa làm cái chỉnh xem là người thêm, sửa, xóa tạo nhé ở bên controller room mày xem xong làm theo ở mấy còn controller khác nhé
+*/
 // [GET] /ap1/v1/admin/category-rooms
 module.exports.getCategory = async (req, res) => {
   try {
