@@ -1,14 +1,36 @@
 const Cart = require("../../models/cart.model");
 const Room = require("../../models/rooms.model");
+const priceHelper = require("../../helper/price.helper")
 //[GET] /api/v1/client/cart
 module.exports.getCart = async (req, res) => {
   try {
     const roomCart = res.locals.cart.products;
-    console.log(roomCart);
+    data = []
+    for(const item of roomCart){
+      const room = await Room.findOne({deleted: false, _id: item.product_id})
+      const roomNew = priceHelper.priceItem(room)
+
+      const objectRoom = {
+        priceNew : roomNew.newPrice,
+        price : roomNew.price,
+        title : roomNew.nameRoom,
+        numberRoom: roomNew.numberRoom,
+        capacity : roomNew.capacity,
+        discountPersent: roomNew.discountPersent,
+        quantity: item.quantity,
+        thumbnail : roomNew.thumbnail[0],
+        floor: roomNew.floor,
+        windowView: roomNew.windowView,
+
+      }
+      data.push(objectRoom)
+
+
+    }
     return res.status(200).json({
       message: "Successfully!",
       code: 200,
-      data: 1,
+      data: data,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message, code: 500 });
