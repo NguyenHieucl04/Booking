@@ -21,7 +21,7 @@ module.exports.addCartProduct = async (req, res) => {
 
     const cart_id = req.cookies.cartId;
     const quantity = parseInt(req.body.quantity);
-
+    
     // Kiểm tra số lượng hợp lệ
     if (!quantity || quantity < 1) {
       return res
