@@ -12,4 +12,7 @@ cartRouter.get("/delete/:roomId", controller.deleteRoomOfCart);
 
 //[PATCH] /api/v1/cart/change/:roomId
 cartRouter.patch("/change/:roomId", controller.changeQuantity);
+
+//[POST] /api/v1/cart/checkout
+cartRouter.post("/checkout", controller.checkout);
 module.exports = cartRouter;

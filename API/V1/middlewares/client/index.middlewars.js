@@ -60,7 +60,7 @@ const createNewCart = async (userId, res) => {
   res.cookie("cartId", cart.id, {
     expires: new Date(Date.now() + dateCart),
     httpOnly: true,
-    secure: true, // Chỉ gửi cookie qua kết nối HTTPS
+    secure: false, // Chỉ gửi cookie qua kết nối HTTPS
     sameSite: "strict", // Ngăn chặn gửi cookie qua trang khác
   });
   return cart;

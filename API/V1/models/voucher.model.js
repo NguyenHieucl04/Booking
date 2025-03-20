@@ -21,7 +21,10 @@ const voucherSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
+    thumbnail: {
+      type: Array,
+      default: [],
+    },
     // Giá trị tối thiểu của đơn hàng để áp dụng
     minOrderValue: {
       type: Number,
