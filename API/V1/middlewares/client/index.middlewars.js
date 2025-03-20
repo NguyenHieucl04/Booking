@@ -28,6 +28,7 @@ module.exports.middleware = async (req, res, next) => {
       if (!cart) {
         console.log("Giỏ hàng không tồn tại, tạo giỏ hàng mới");
         cart = await createNewCart(userDataBase.id, res);
+        
       }
       if (cart.products.length > 0) {
         cart.totalProduct = cart.products.reduce((sum, item) => {
@@ -60,7 +61,7 @@ const createNewCart = async (userId, res) => {
   res.cookie("cartId", cart.id, {
     expires: new Date(Date.now() + dateCart),
     httpOnly: true,
-    secure: true, // Chỉ gửi cookie qua kết nối HTTPS
+    secure: false, // Chỉ gửi cookie qua kết nối HTTPS
     sameSite: "strict", // Ngăn chặn gửi cookie qua trang khác
   });
   return cart;

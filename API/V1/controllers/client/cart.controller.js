@@ -1,14 +1,34 @@
 const Cart = require("../../models/cart.model");
 const Room = require("../../models/rooms.model");
+const priceHelper = require("../../helper/price.helper")
 //[GET] /api/v1/client/cart
 module.exports.getCart = async (req, res) => {
   try {
     const roomCart = res.locals.cart.products;
-    console.log(roomCart);
+    data = []
+    for(const item of roomCart){
+        const room = await Room.findOne({deleted: false, _id: item.product_id})
+        const roomNew = priceHelper.priceItem(room);
+        objec = {
+          priceDefault : roomNew.price,
+          priceNew : roomNew.newPrice,
+          title: roomNew.nameRoom,
+          numberRoom: roomNew.numberRoom,
+          capacity : roomNew.capacity,
+          thumbnail: roomNew.thumbnail[0],
+          windowView: roomNew.windowView,
+          floor: roomNew.floor,
+          discountPersent: roomNew.discountPersent,
+          quantity: item.quantity
+        }
+        data.push(objec)
+
+    }
+
     return res.status(200).json({
       message: "Successfully!",
       code: 200,
-      data: 1,
+      data: data,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message, code: 500 });
@@ -121,3 +141,6 @@ module.exports.changeQuantity = async (req, res) => {
     return res.status(500).json({ message: error.message, code: 500 });
   }
 };
+
+
+// 
