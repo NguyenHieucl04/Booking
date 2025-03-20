@@ -57,7 +57,6 @@ module.exports.addCartProduct = async (req, res) => {
         }
       );
     }
-
     return res
       .status(200)
       .json({ message: "Add room to cart successfully!", code: 200 });
