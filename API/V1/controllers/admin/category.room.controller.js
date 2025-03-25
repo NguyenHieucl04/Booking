@@ -17,7 +17,6 @@ module.exports.getCategory = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
       .populate("parentId");
-    // console.log(data);
     if (data.lenth === 0) {
       return res.status(400).json({
         message: "PARENT_ID NOTS EXIST!",
