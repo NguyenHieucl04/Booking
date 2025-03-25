@@ -8,7 +8,7 @@ module.exports.adminAuthencation = async (req, res, next) => {
       token: tokenBeare,
       deleted: false,
     });
-    console.log(userDataBase);
+    // console.log(userDataBase);
     if (!userDataBase) {
       res.status(400).json({
         message: "Token incorrect!",
