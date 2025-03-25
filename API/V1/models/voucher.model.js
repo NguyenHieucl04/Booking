@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const voucherSchema = new mongoose.Schema(
   {
     code: {
@@ -21,15 +20,13 @@ const voucherSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    thumbnail: {
-      type: Array,
-      default: [],
-    },
+    thumbnail: String,
     // Giá trị tối thiểu của đơn hàng để áp dụng
     minOrderValue: {
       type: Number,
       default: 0,
     },
+    // Giá trị giảm giá tối đa mà voucher có thể áp dụng.
     maxDiscountValue: {
       type: Number,
       default: null,
@@ -47,10 +44,12 @@ const voucherSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    // Số lần tối đa voucher có thể được sử dụng
     usageLimit: {
       type: Number,
       default: null,
     },
+    // Số lần voucher đã được sử dụng
     usedCount: {
       type: Number,
       default: 0,

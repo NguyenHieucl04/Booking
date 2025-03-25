@@ -257,7 +257,6 @@ module.exports.roomDelete = async (req, res) => {
   }
 };
 // [PATCH] /api/v1/admin/rooms/undelete/:idRoom
-
 module.exports.undelete = async (req, res) => {
   try {
     const idRoom = req.params.idRoom;
