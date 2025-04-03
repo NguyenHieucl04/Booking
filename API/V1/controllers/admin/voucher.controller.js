@@ -3,7 +3,6 @@ const generateUniqueVoucherCode = require("../../helper/voucher.helper");
 //[GET] /api/v1/admin/vouchers
 module.exports.index = async (req, res) => {
   try {
-<<<<<<< HEAD
     const {
       status = null,
       keyword = null,
@@ -46,10 +45,6 @@ module.exports.index = async (req, res) => {
         limit: parseInt(limit),
       },
     });
-=======
-    // lấy ra danh sách voucher
-    // lấy ra danh sách voucher
->>>>>>> nhanh-cart
   } catch (error) {
     return res.status(500).json({
       message: error.message,
