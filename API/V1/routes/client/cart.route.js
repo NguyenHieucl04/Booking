@@ -15,5 +15,10 @@ cartRouter.patch("/change/:roomId", controller.changeQuantity);
 
 //[POST] /api/v1/cart/checkout
 cartRouter.post("/checkout", controller.checkout);
+<<<<<<< HEAD
 // cartRouter.post("/order", controller.order)
+=======
+// [POST] /api/v1/cart/checkout/order
+cartRouter.post("/checkout/order", controller.postOrder);
+>>>>>>> nhanh-cart
 module.exports = cartRouter;
