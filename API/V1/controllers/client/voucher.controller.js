@@ -1,6 +1,6 @@
 const Voucher = require("../../models/voucher.model");
 
-//[GET] /api/v1/admin/vouchers
+//[GET] /api/v1/client/vouchers
 module.exports.index = async (req, res) => {
   try {
     const {
@@ -13,6 +13,7 @@ module.exports.index = async (req, res) => {
     } = req.query;
     const find = {
       deleted: false,
+      endDate:{ $gte: new Date() } // lấy gte lá lớn hơn hoặc bắng và lte là nhỏ hơn hoặc bằng 
     };
 
     if (status) {
