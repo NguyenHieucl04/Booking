@@ -1,6 +1,7 @@
 const Cart = require("../../models/cart.model");
 const Room = require("../../models/rooms.model");
 const Order = require("../../models/order.model");
+const Voucher = require("../../models/voucher.model");
 const priceHelper = require("../../helper/price.helper");
 const momoHelper = require("../../helper/momo.helper");
 // ham tinh gia cho 1 don hang
@@ -291,17 +292,71 @@ module.exports.postOrder = async (req, res) => {
         delivery: req.body.delivery,
       };
 
-      console.log(ids);
+      const totalPrice = allPriceOreder(productOrderSuccess);
+
+      let totalAmount = totalPrice;
+      // Nếu người dùng gửi mã giảm giá và có đủ điều kiện
+      // trường hợp này fe đã sử lý tốt và cho người dùng gửi mã giá giám hợp lệ với điều kiện
+      const idVoucher = req.body.idVoucher;
+      if (idVoucher) {
+        const voucherApp = await Voucher.findOne({
+          status: "active",
+          _id: idVoucher,
+          deleted: false,
+        });
+        const typeVoucher = voucherApp.discountType;
+        const valueVoucher = voucherApp.discountValue;
+        const minOrderValue = voucherApp.minOrderValue;
+        const usedCount = voucherApp.usedCount;
+        const maxDiscountValue = voucherApp.maxDiscountValue;
+        if (!voucherApp) {
+          return res.status(404).json({
+            message: "Voucher không tồn tại hoặc không hợp lệ!",
+            code: 404,
+          });
+        }
+        // Kiểm tra điều kiện áp dụng voucher
+        if (totalPrice < minOrderValue) {
+          return res.status(400).json({
+            message: `Đơn hàng không đủ điều kiện áp dụng voucher! Giá trị tối thiểu: ${voucherApp.minOrderValue}`,
+            code: 400,
+          });
+        }
+
+        switch (typeVoucher) {
+          case "fixed":
+            totalAmount = totalPrice - valueVoucher;
+            break;
+
+          case "percentage":
+            const discount = (voucherApp.discountValue / 100) * totalPrice;
+            totalAmount = totalPrice - Math.min(discount, maxDiscountValue);
+            break;
+
+          default:
+            throw new Error("Loại voucher không hợp lệ!");
+        }
+        await Voucher.updateOne(
+          {
+            _id: idVoucher,
+          },
+          {
+            $set: {
+              usedCount: usedCount + 1,
+            },
+          }
+        );
+      }
+
       // kiểm tra phường thức thanh toán
       const payMent = req.body.payment;
-      const totalPrice = allPriceOreder(productOrderSuccess);
       // sử lý nếu người dúng gửi mã voucher lên
       switch (payMent) {
         case "payMomo":
           const orderProduct = new Order(orderSuccess);
           await orderProduct.save();
           const momo = await momoHelper.momoPaymentApi(
-            totalPrice + 25000,
+            totalAmount + 25000,
             `${orderProduct.id}`,
             "https://cd84-183-80-130-7.ngrok-free.app/api/v1/client/momo-callback"
           );
@@ -331,6 +386,7 @@ module.exports.postOrder = async (req, res) => {
           );
           // console.log("chay qua day");
           // Xóa sản phẩm order ra khỏi giỏ hàng
+          console.log(totalAmount);
           await Cart.updateOne(
             { _id: cart_id },
             {
@@ -342,6 +398,7 @@ module.exports.postOrder = async (req, res) => {
             code: 200,
             data: {
               orderId: cashOrder.id,
+              totalAmount: totalAmount,
             },
           });
         default:
@@ -363,7 +420,10 @@ module.exports.momoCallBack = async (req, res) => {
     // Kiểm tra trạng thái thanh toán
     if (resultCode === 0) {
       // Thanh toán thành công
-      await Order.updateOne({ _id: orderId }, { status: "PAID" });
+      await Order.updateOne(
+        { _id: orderId },
+        { status: "pending", statusPayment: "paid" }
+      );
 
       return res.status(200).json({
         message: "Thanh toán thành công!",
@@ -371,7 +431,7 @@ module.exports.momoCallBack = async (req, res) => {
       });
     } else {
       // Thanh toán thất bại
-      await Order.updateOne({ _id: orderId }, { status: "FAILED" });
+      await Order.updateOne({ _id: orderId }, { statusPayment: "FAILED" });
 
       return res.status(400).json({
         message: "Thanh toán thất bại!",

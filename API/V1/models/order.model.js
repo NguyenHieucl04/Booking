@@ -19,6 +19,7 @@ const orderSchema = new mongoose.Schema(
     ],
     payMent: String,
     paymentMethod: String,
+    statusPayment: String,
     delivery: String,
     status: String,
     deleted: {

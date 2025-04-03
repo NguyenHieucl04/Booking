@@ -15,8 +15,8 @@ routerVoucher.post(
   cloudiary.cloudImage,
   controller.addVoucher
 );
-//[GET] /api/v1/admin/vouchers/edit/:idVoucher
-routerVoucher.get("/edit/:idVoucher", controller.getEditVoucer);
+//[GET] /api/v1/admin/vouchers/detail/:idVoucher
+routerVoucher.get("/detail/:idVoucher", controller.getEditVoucer);
 //[PATCH] /api/v1/admin/vouchers/edit/:idVoucher
 routerVoucher.patch(
   "/edit/:idVoucher",

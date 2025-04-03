@@ -101,7 +101,7 @@ module.exports.addVoucher = async (req, res) => {
     });
   }
 };
-//[GET] /api/v1/admin/vouchers/edit/:idVoucher
+//[GET] /api/v1/admin/vouchers/detail/:idVoucher
 module.exports.getEditVoucer = async (req, res) => {
   try {
     const id = req.params.idVoucher;
