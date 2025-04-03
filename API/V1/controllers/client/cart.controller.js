@@ -156,7 +156,6 @@ module.exports.changeQuantity = async (req, res) => {
 };
 
 //[POST] /api/v1/cart/checkout
-
 module.exports.checkout = async (req, res) => {
   try {
     const id_and_method = req.body.methodandid;
