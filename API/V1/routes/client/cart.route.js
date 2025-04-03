@@ -15,4 +15,6 @@ cartRouter.patch("/change/:roomId", controller.changeQuantity);
 
 //[POST] /api/v1/cart/checkout
 cartRouter.post("/checkout", controller.checkout);
+// [POST] /api/v1/cart/checkout/order
+cartRouter.post("/checkout/order", controller.postOrder);
 module.exports = cartRouter;
