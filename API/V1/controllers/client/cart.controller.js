@@ -249,4 +249,4 @@ module.exports.checkout = async (req, res) => {
   }
 };
 
-// [POST] /api/v1/
+// [POST] /api/v1/c
