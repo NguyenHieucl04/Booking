@@ -25,7 +25,11 @@ module.exports.login = async (req, res) => {
       });
       return;
     }
-    res.cookie("token", existEmail.token);
+    res.cookie("token", existEmail.token, {
+      httpOnly: false, // để fe có thế lấy được
+      secure: false, // Chỉ bật khi dùng HTTPS
+      sameSite: "lax", // Ch
+    });
     res.status(200).json({
       message: "Login successful!",
       code: 200,
@@ -188,6 +192,12 @@ module.exports.resetPassword = async (req, res) => {
 module.exports.logout = async (req, res) => {
   try {
     res.clearCookie("token");
+    res.clearCookie("cartId", {
+      httpOnly: false,
+      secure: false, // Chỉ gửi cookie qua kết nối HTTPS
+      sameSite: "lax", // Ngăn chặn gửi cookie qua trang khác
+      path: "/",
+    });
     res.status(200).json({
       message: "Logout successful!",
       code: 200,

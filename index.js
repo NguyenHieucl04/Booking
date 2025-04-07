@@ -1,10 +1,17 @@
 const express = require("express"); // nhung thu vien
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 require("dotenv").config();
 const dataBaseConnect = require("./config/database");
 dataBaseConnect.dataConnect();
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Địa chỉ frontend
+    credentials: true, // Cho phép gửi cookie
+  })
+); // Cho phép mọi yêu cầu CORS
 app.use(bodyParser.json());
 app.use(cookieParser());
 const port = process.env.PORT;

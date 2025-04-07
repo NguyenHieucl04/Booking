@@ -7,6 +7,8 @@ module.exports.middleware = async (req, res, next) => {
       token: tokenBeare,
       deleted: false,
     });
+
+    // khi người dùng đăng nhập vào sẽ tạo cart cho người ta và lưu cartId CÓ ID CỦA NGƯỜI DÙNG
     if (!userDataBase) {
       res.status(400).json({
         message: "Token incorrect!",
@@ -16,20 +18,33 @@ module.exports.middleware = async (req, res, next) => {
     }
     req.user = userDataBase;
     let cart;
-    if (!req.cookies.cartId) {
-      console.log("khong co cartId");
+    // NGƯỜI DÙNG VỪA MỚI LẬP TÀI KHOẢN
+    cart = await Cart.findOne({ userId: userDataBase.id });
+    console.log(cart);
+    // trường hợp người dùng mới lập tài khoản và chưa có cartID
+    if (!req.cookies.cartId && !cart) {
+      console.log("Tài khoản mới");
       cart = await createNewCart(userDataBase.id, res);
-    } else {
-      console.log("co card id");
+    }
+    // trường hợp người dùng đã lập tài khoản nhưng đăng xuất ra lúc này sẽ lấy cartId lưu ra thêm vào cookies
+    else if (!req.cookies.cartId && cart) {
+      console.log("Tài khoản cũ");
       cart = await Cart.findOne({
-        _id: req.cookies.cartId,
         userId: userDataBase.id,
       });
+
       if (!cart) {
         console.log("Giỏ hàng không tồn tại, tạo giỏ hàng mới");
         cart = await createNewCart(userDataBase.id, res);
-        
       }
+      const dateCart = 1000 * 60 * 60 * 24 * 180 * 100;
+      res.cookie("cartId", cart.id, {
+        expires: new Date(Date.now() + dateCart),
+        httpOnly: false,
+        secure: false, // Chỉ gửi cookie qua kết nối HTTPS
+        sameSite: "lax", // Ngăn chặn gửi cookie qua trang khác,
+        path: "/",
+      });
       if (cart.products.length > 0) {
         cart.totalProduct = cart.products.reduce((sum, item) => {
           return sum + item.quantity;
@@ -60,9 +75,10 @@ const createNewCart = async (userId, res) => {
   const dateCart = 1000 * 60 * 60 * 24 * 180 * 100;
   res.cookie("cartId", cart.id, {
     expires: new Date(Date.now() + dateCart),
-    httpOnly: true,
+    httpOnly: false,
     secure: false, // Chỉ gửi cookie qua kết nối HTTPS
-    sameSite: "strict", // Ngăn chặn gửi cookie qua trang khác
+    sameSite: "lax", // Ngăn chặn gửi cookie qua trang khác,
+    path: "/",
   });
   return cart;
 };
